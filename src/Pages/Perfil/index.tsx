@@ -1,7 +1,6 @@
 import { useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 
-import pizza from '../../assets/images/pizza marguerita 3.png'
 import fechar from '../../assets/images/close.png'
 import HeaderPerfil from '../../components/Perfil/HeaderPerfil'
 import Footer from '../../components/Footer'
@@ -53,8 +52,12 @@ const Perfil = () => {
   const { id } = useParams() as unknown as Parametro
   const [cardsRestaurantes, setCardsRestaurantes] = useState<Restaurante>()
   const [modalEstaAberto, setModalEstaAberto] = useState(false)
-  const [buttonText, setButtonText] = useState('Adicionar ao carrinho')
+  const [cardSelecionado, setCardSelecionado] = useState<Cardapio | null>(null)
   const [cardsCardapio, setCardsCardapio] = useState<Cardapio[]>([])
+
+  // const [buttonText, setButtonText] = useState('Adicionar ao carrinho')
+
+  const [buttonText, setButtonText] = useState<{ [key: number]: string }>({})
 
   useEffect(() => {
     fetch(`https://fake-api-tau.vercel.app/api/efood/restaurantes/${id}`)
@@ -66,35 +69,64 @@ const Perfil = () => {
       })
   }, [id])
 
+  const abrirModal = (item: Cardapio) => {
+    setCardSelecionado(item)
+    setModalEstaAberto(true)
+  }
+
+  const fecharModal = () => {
+    setModalEstaAberto(false)
+    setCardSelecionado(null)
+  }
+
+  const handleMouseEnter = (id: number) => {
+    setButtonText((prev) => ({
+      ...prev,
+      [id]: 'Mais detalhes'
+    }))
+  }
+
+  const handleMouseLeave = (id: number) => {
+    setButtonText((prev) => ({
+      ...prev,
+      [id]: 'Adicionar ao carrinho'
+    }))
+  }
+
+  // const handleClick = (id: number) => {
+  //   setModalEstaAberto(true)
+  // }
+
   return (
     <>
       <HeaderPerfil />
       <Modal className={modalEstaAberto ? 'visivel' : ''}>
         <ModalContent className="container">
           <HeaderCard>
-            <img
-              src={fechar}
-              alt="Fechar"
-              onClick={() => setModalEstaAberto(false)}
-            />
+            <img src={fechar} alt="Fechar" onClick={fecharModal} />
           </HeaderCard>
-          {cardsCardapio.map((item) => (
-            <ModalCard key={item.id}>
+
+          {cardSelecionado ? (
+            <ModalCard key={cardSelecionado.id}>
               <div>
-                <Image src={item.foto} />
+                <Image src={cardSelecionado.foto} />
               </div>
               <div>
-                <TituloCard>{item.nome}</TituloCard>
+                <TituloCard>{cardSelecionado.nome}</TituloCard>
                 <ParagrafoCard>
-                  {item.descricao}
-                  <br></br>
-                  <br></br>
-                  Serve de {item.porcao}
+                  {cardSelecionado.descricao}
+                  <br />
+                  <br />
+                  Serve de {cardSelecionado.porcao}
                 </ParagrafoCard>
-                <BotaoCard>Adicionar ao carrinho - R${item.preco}0</BotaoCard>
+                <BotaoCard>
+                  Adicionar ao carrinho - R${cardSelecionado.preco}0
+                </BotaoCard>
               </div>
             </ModalCard>
-          ))}
+          ) : (
+            <p>Carregando...</p>
+          )}
         </ModalContent>
         <div className="overlay"></div>
       </Modal>
@@ -127,11 +159,11 @@ const Perfil = () => {
                 )}
                 <Paragrafo>{item.descricao}</Paragrafo>
                 <Botao
-                  onMouseEnter={() => setButtonText('Mais detalhes')}
-                  onMouseLeave={() => setButtonText('Adicionar ao carrinho')}
-                  onClick={() => setModalEstaAberto(true)}
+                  onMouseEnter={() => handleMouseEnter(item.id)}
+                  onMouseLeave={() => handleMouseLeave(item.id)}
+                  onClick={() => abrirModal(item)}
                 >
-                  {buttonText}
+                  {buttonText[item.id] || 'Adicionar ao carrinho'}
                 </Botao>
               </CardCategories>
             ))}
