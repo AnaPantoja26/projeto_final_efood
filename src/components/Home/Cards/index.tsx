@@ -14,6 +14,7 @@ import nota from '../../../assets/images/Page-1.png'
 import Tag from '../Tag'
 
 type Props = {
+  id: number
   titulo: string
   destacado?: boolean
   tipo: string
@@ -23,6 +24,7 @@ type Props = {
 }
 
 const Cards = ({
+  id,
   titulo,
   destacado,
   tipo,
@@ -48,7 +50,7 @@ const Cards = ({
       </Infos>
       <Descricao>{descricao}</Descricao>
       <Botao>
-        <Link to="/perfil/:id">Saiba Mais</Link>
+        <Link to={`/perfil/${id}`}>Saiba Mais</Link>
       </Botao>
     </Card>
   )

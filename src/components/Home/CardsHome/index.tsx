@@ -13,6 +13,7 @@ const CardsHome = ({ produtos }: Props) => (
       {produtos.map((produto) => (
         <Cards
           key={produto.id}
+          id={produto.id}
           titulo={produto.titulo}
           destacado={produto.destacado}
           tipo={produto.tipo}
