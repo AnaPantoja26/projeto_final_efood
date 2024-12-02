@@ -3,8 +3,9 @@ import { useEffect, useState } from 'react'
 import CardsHome from '../../components/Home/CardsHome'
 import Footer from '../../components/Footer'
 import HeaderHome from '../../components/Home/HeaderHome'
+import { useGetFeaturedProdutoQuery } from '../../services/api'
 
-type Produto = {
+export type Produto = {
   id: number
   titulo: string
   destacado: boolean
@@ -25,6 +26,7 @@ type Produto = {
 }
 
 const Home = () => {
+  const { data: produtos, isLoading } = useGetFeaturedProdutoQuery()
   const [cardsHome, setCardsHome] = useState<Produto[]>([])
 
   useEffect(() => {

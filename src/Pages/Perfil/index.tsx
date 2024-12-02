@@ -23,6 +23,8 @@ import {
   TituloHero,
   Image
 } from './styles'
+import { useDispatch } from 'react-redux'
+import { add } from '../../store/reducers/cart'
 
 type Parametro = {
   id: number
@@ -54,9 +56,6 @@ const Perfil = () => {
   const [modalEstaAberto, setModalEstaAberto] = useState(false)
   const [cardSelecionado, setCardSelecionado] = useState<Cardapio | null>(null)
   const [cardsCardapio, setCardsCardapio] = useState<Cardapio[]>([])
-
-  // const [buttonText, setButtonText] = useState('Adicionar ao carrinho')
-
   const [buttonText, setButtonText] = useState<{ [key: number]: string }>({})
 
   useEffect(() => {
@@ -96,6 +95,12 @@ const Perfil = () => {
   // const handleClick = (id: number) => {
   //   setModalEstaAberto(true)
   // }
+
+  const dispatch = useDispatch()
+
+  const addToCart = () => {
+    dispatch(add())
+  }
 
   return (
     <>
