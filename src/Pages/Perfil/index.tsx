@@ -24,7 +24,8 @@ import {
   Image
 } from './styles'
 import { useDispatch } from 'react-redux'
-import { add } from '../../store/reducers/cart'
+import { add, open } from '../../store/reducers/cart'
+import Produto from '../../models/Produto'
 
 type Parametro = {
   id: number
@@ -48,6 +49,26 @@ export interface Cardapio {
   nome: string
   descricao: string
   porcao: string
+}
+
+const produto: Produto = {
+  id: 0,
+  titulo: '',
+  destacado: false,
+  tipo: '',
+  avaliacao: 0,
+  descricao: '',
+  capa: '',
+  cardapio: [
+    {
+      foto: '',
+      preco: 0,
+      id: 0,
+      nome: '',
+      descricao: '',
+      porcao: ''
+    }
+  ]
 }
 
 const Perfil = () => {
@@ -99,7 +120,8 @@ const Perfil = () => {
   const dispatch = useDispatch()
 
   const addToCart = () => {
-    dispatch(add())
+    dispatch(add(produto))
+    dispatch(open())
   }
 
   return (
@@ -124,7 +146,7 @@ const Perfil = () => {
                   <br />
                   Serve de {cardSelecionado.porcao}
                 </ParagrafoCard>
-                <BotaoCard>
+                <BotaoCard onClick={addToCart}>
                   Adicionar ao carrinho - R${cardSelecionado.preco}0
                 </BotaoCard>
               </div>
