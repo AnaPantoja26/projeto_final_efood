@@ -29,8 +29,10 @@ export const Sidebar = styled.aside`
   color: ${cores.rosaEscuro};
   z-index: 1;
   padding: 32px 8px 0 8px;
-  max-width: 360px;
   width: 100%;
+  max-width: 360px;
+  display: block;
+  height: 100%;
 `
 
 export const CartItem = styled.li`
@@ -38,8 +40,9 @@ export const CartItem = styled.li`
   align-items: flex-start;
   display: flex;
   background-color: ${cores.bege};
-  padding: 8px 109px 12px 8px;
+  padding: 8px 8px 12px 8px;
   margin-bottom: 16px;
+  width: 100%;
 
   img {
     height: 80px;
@@ -78,4 +81,39 @@ export const Button = styled.button`
     width: 16px;
     height: 16px;
   }
+`
+
+export const ButtonCart = styled.button`
+  background-color: ${cores.bege};
+  color: ${cores.rosaEscuro};
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  height: 24px;
+  margin-top: 4px;
+  font-family: Roboto, sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 17px;
+  text-align: center;
+`
+export const PrecoCart = styled.div`
+  color: ${cores.begeClaro};
+  width: 100%;
+  height: 16px;
+  font-family: Roboto, sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 17px;
+  text-align: center;
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  margin: 24px 0 16px;
+`
+
+export const TextoCart = styled.div`
+  font-size: 14px;
+  font-weight: 700;
+  color: ${cores.begeClaro};
 `

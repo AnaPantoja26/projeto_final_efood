@@ -18,16 +18,10 @@ export const GlobalCss = createGlobalStyle`
     background-color: ${cores.begeClaro};
     color: ${cores.rosaEscuro};
     }
-`
-// export const Container = styled.div`
-//   max-width: 1024px;
-//   min-width: 375px;
-//   width: 100%;
-//   margin: 0 auto;
 
-//   @media screen and (max-width: ${temas.breakpoints.mobile}) {
-//     display: flex;
-//     flex-direction: column;
-//     gap: 72px;
-//   }
-// `
+    // .container {
+    // max-width: 1024px;
+    // width: 100%;
+    // margin: 0 auto;
+    // }
+`

@@ -25,10 +25,10 @@ import {
 } from './styles'
 import { useDispatch } from 'react-redux'
 import { add, open } from '../../store/reducers/cart'
-import Produto from '../../models/Produto'
+// import Produto from '../../models/Produto'
 
 type Parametro = {
-  id: number
+  id: string
 }
 
 export interface Restaurante {
@@ -51,28 +51,28 @@ export interface Cardapio {
   porcao: string
 }
 
-const produto: Produto = {
-  id: 0,
-  titulo: '',
-  destacado: false,
-  tipo: '',
-  avaliacao: 0,
-  descricao: '',
-  capa: '',
-  cardapio: [
-    {
-      foto: '',
-      preco: 0,
-      id: 0,
-      nome: '',
-      descricao: '',
-      porcao: ''
-    }
-  ]
-}
+// const produto: Produto = {
+//   id: 0,
+//   titulo: '',
+//   destacado: false,
+//   tipo: '',
+//   avaliacao: 0,
+//   descricao: '',
+//   capa: '',
+//   cardapio: [
+//     {
+//       foto: '',
+//       preco: 0,
+//       id: 0,
+//       nome: '',
+//       descricao: '',
+//       porcao: ''
+//     }
+//   ]
+// }
 
 const Perfil = () => {
-  const { id } = useParams() as unknown as Parametro
+  const { id } = useParams<Parametro>()
   const [cardsRestaurantes, setCardsRestaurantes] = useState<Restaurante>()
   const [modalEstaAberto, setModalEstaAberto] = useState(false)
   const [cardSelecionado, setCardSelecionado] = useState<Cardapio | null>(null)
@@ -120,8 +120,8 @@ const Perfil = () => {
   const dispatch = useDispatch()
 
   const addToCart = () => {
-    dispatch(add(produto))
-    dispatch(open())
+    cardSelecionado?.id && dispatch(add(cardSelecionado))
+    cardSelecionado?.id && dispatch(open())
   }
 
   return (
