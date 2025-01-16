@@ -117,3 +117,167 @@ export const TextoCart = styled.div`
   font-weight: 700;
   color: ${cores.begeClaro};
 `
+
+export const CartEntrega = styled.div`
+  display: block;
+  background-color: ${cores.rosaEscuro};
+  color: ${cores.bege};
+  width: 100%;
+
+  h2 {
+    font-family: Roboto, sans-serif;
+    font-weight: 500;
+    font-size: 16px;
+    margin-bottom: 20px;
+  }
+
+  label {
+    font-family: Roboto, sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    margin-bottom: 20px;
+  }
+
+  input {
+    background-color: ${cores.bege};
+    display: block;
+    width: 100%;
+    padding: 8px;
+    margin-top: 8px;
+    margin-bottom: 8px;
+    border: none;
+  }
+
+  .cep-numero-container {
+    display: flex;
+    gap: 16px;
+    width: 100%;
+  }
+
+  .cep-container,
+  .numero-container {
+    flex: 1;
+  }
+
+  .cep-container {
+    margin-right: 16px;
+  }
+
+  .cep-container input,
+  .numero-container input {
+    width: 100%;
+  }
+`
+export const BotaoPagamento = styled.button`
+  background-color: ${cores.bege};
+  color: ${cores.rosaEscuro};
+  display: block;
+  width: 100%;
+  padding: 4px;
+  margin-top: 16px;
+  margin-bottom: 8px;
+  border: none;
+  font-family: Roboto, sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 17px;
+  text-align: center;
+  cursor: pointer;
+`
+export const BotaoCarrinho = styled.button`
+  background-color: ${cores.bege};
+  color: ${cores.rosaEscuro};
+  display: block;
+  width: 100%;
+  padding: 4px;
+  margin-bottom: 8px;
+  border: none;
+  font-family: Roboto, sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 17px;
+  text-align: center;
+  cursor: pointer;
+`
+export const CartPagamento = styled.div`
+  color: ${cores.bege};
+
+  h2 {
+    font-family: Roboto, sans-serif;
+    font-weight: 500;
+    font-size: 16px;
+    margin-bottom: 19px;
+  }
+
+  label {
+    font-family: Roboto, sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    margin-bottom: 20px;
+  }
+
+  input {
+    background-color: ${cores.bege};
+    display: block;
+    width: 100%;
+    padding: 8px;
+    margin-top: 8px;
+    margin-bottom: 8px;
+    border: none;
+  }
+
+  .numero-cvv-container {
+    display: flex;
+    gap: 30px;
+  }
+
+  .numero-container {
+    width: 460px;
+  }
+
+  .vencimento-container {
+    display: flex;
+    gap: 30px;
+    //     width: 100%;
+  }
+`
+export const CartCompra = styled.div`
+  color: ${cores.bege};
+
+  h2 {
+    width: 219px;
+    height: 19px;
+
+    font-family: Roboto, sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 19px;
+  }
+
+  p {
+    width: 344px;
+    height: 286px;
+    margin-top: 16px;
+    margin-bottom: 24px;
+    font-family: Roboto, sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 22px;
+  }
+
+  button {
+    background-color: ${cores.bege};
+    color: ${cores.rosaEscuro};
+    display: block;
+    width: 100%;
+    padding: 4px;
+    margin-bottom: 8px;
+    border: none;
+    font-family: Roboto, sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 17px;
+    text-align: center;
+    cursor: pointer;
+  }
+`

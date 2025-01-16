@@ -13,15 +13,12 @@ export const GlobalCss = createGlobalStyle`
     padding: 0;
     box-sizing: border-box;
     font-family: Roboto, sans-serif;
+
 }
     body {
     background-color: ${cores.begeClaro};
     color: ${cores.rosaEscuro};
     }
 
-    // .container {
-    // max-width: 1024px;
-    // width: 100%;
-    // margin: 0 auto;
-    // }
+
 `

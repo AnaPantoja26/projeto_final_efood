@@ -51,26 +51,6 @@ export interface Cardapio {
   porcao: string
 }
 
-// const produto: Produto = {
-//   id: 0,
-//   titulo: '',
-//   destacado: false,
-//   tipo: '',
-//   avaliacao: 0,
-//   descricao: '',
-//   capa: '',
-//   cardapio: [
-//     {
-//       foto: '',
-//       preco: 0,
-//       id: 0,
-//       nome: '',
-//       descricao: '',
-//       porcao: ''
-//     }
-//   ]
-// }
-
 const Perfil = () => {
   const { id } = useParams<Parametro>()
   const [cardsRestaurantes, setCardsRestaurantes] = useState<Restaurante>()
