@@ -1,7 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-// import Produto from '../../models/Produto'
-
 export interface Cardapio {
   foto: string
   preco: number
@@ -23,7 +21,6 @@ type CartState = {
   items: Cardapio[]
   isOpen: boolean
 }
-
 const initialState: CartState = {
   items: [],
   isOpen: false

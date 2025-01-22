@@ -50,6 +50,8 @@ const Cart = () => {
 
   const { isOpen, items } = useSelector((state: RootReducer) => state.cart)
 
+  const itensSalvos = Array.isArray(items) ? items : []
+
   const dispatch = useDispatch()
 
   const closeCart = () => {
@@ -75,23 +77,7 @@ const Cart = () => {
   }
 
   const continuarComPagamento = async (values: FormValues) => {
-    console.log('Valores do formulário:', values)
-
-    try {
-      const response = await fetch('sua-api-url', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(values)
-      })
-
-      const data = await response.json()
-
-      console.log('Pagamento realizado com sucesso:', data)
-    } catch (error) {
-      console.error('Erro ao processar o pagamento:', error)
-    }
+    setIsPagamentoAtivo(true)
   }
 
   const voltarParaCarrinho = () => {
@@ -162,6 +148,30 @@ const Cart = () => {
     cidade: Yup.string().required('Cidade é obrigatória')
   })
 
+  const validationSchemaPagamento = Yup.object({
+    nomeCartao: Yup.string().required('Nome no cartão é obrigatório'),
+    numeroCartao: Yup.string()
+      .required('Número do cartão é obrigatório')
+      .matches(/^\d{16}$/, 'Número do cartão deve ter 16 dígitos'),
+    cvv: Yup.string()
+      .required('CVV é obrigatório')
+      .matches(/^\d{3}$/, 'CVV deve ter 3 dígitos'),
+    mes: Yup.string()
+      .required('Mês de vencimento é obrigatório')
+      .matches(/^(0[1-9]|1[0-2])$/, 'Mês inválido'),
+    anoVencimento: Yup.string()
+      .required('Ano de vencimento é obrigatório')
+      .matches(/^\d{4}$/, 'Ano inválido')
+      .test(
+        'valid-year',
+        'Ano de vencimento não pode ser no passado',
+        (value) => {
+          const currentYear = new Date().getFullYear()
+          return Number(value) >= currentYear
+        }
+      )
+  })
+
   return (
     <CartContainer className={isOpen ? 'is-open' : ''}>
       <Overlay onClick={closeCart} />
@@ -225,65 +235,76 @@ const Cart = () => {
                 mes: '',
                 anoVencimento: ''
               }}
-              validationSchema={validationSchema}
+              validationSchema={validationSchemaPagamento}
               onSubmit={finalizarCompra}
             >
-              <Form>
-                <label htmlFor="nomeCartao">Nome no cartão</label>
-                <Field
-                  id="nomeCartao"
-                  name="nomeCartao"
-                  placeholder="Digite o nome"
-                />
-                <ErrorMessage name="nomeCartao" component="div" />
+              {({ isValid, isSubmitting }) => (
+                <Form>
+                  <label htmlFor="nomeCartao">Nome no cartão</label>
+                  <Field
+                    id="nomeCartao"
+                    name="nomeCartao"
+                    placeholder="Digite o nome"
+                  />
+                  <ErrorMessage name="nomeCartao" component="div" />
 
-                <div className="numero-cvv-container">
-                  <div className="numero-container">
-                    <label htmlFor="numeroCartao">Número do cartão</label>
-                    <Field
-                      id="numeroCartao"
-                      name="numeroCartao"
-                      placeholder="Digite o número"
-                      maxLength={12}
-                    />
-                    <ErrorMessage name="numeroCartao" component="div" />
+                  <div className="numero-cvv-container">
+                    <div className="numero-container">
+                      <label htmlFor="numeroCartao">Número do cartão</label>
+                      <Field
+                        id="numeroCartao"
+                        name="numeroCartao"
+                        placeholder="Digite o número"
+                        maxLength={16}
+                      />
+                      <ErrorMessage name="numeroCartao" component="div" />
+                    </div>
+                    <div className="cvv-container">
+                      <label htmlFor="cvv">CVV</label>
+                      <Field
+                        id="cvv"
+                        name="cvv"
+                        placeholder="xxx"
+                        maxLength={3}
+                      />
+                      <ErrorMessage name="cvv" component="div" />
+                    </div>
                   </div>
-                  <div className="cvv-container">
-                    <label htmlFor="cvv">CVV</label>
-                    <Field
-                      id="cvv"
-                      name="cvv"
-                      placeholder="xxx"
-                      maxLength={3}
-                    />
-                    <ErrorMessage name="cvv" component="div" />
-                  </div>
-                </div>
 
-                <div className="vencimento-container">
-                  <div>
-                    <label htmlFor="mes">Mês de vencimento</label>
-                    <Field id="mes" name="mes" placeholder="xx" maxLength={2} />
-                    <ErrorMessage name="mes" component="div" />
+                  <div className="vencimento-container">
+                    <div>
+                      <label htmlFor="mes">Mês de vencimento</label>
+                      <Field
+                        id="mes"
+                        name="mes"
+                        placeholder="xx"
+                        maxLength={2}
+                      />
+                      <ErrorMessage name="mes" component="div" />
+                    </div>
+                    <div>
+                      <label htmlFor="anoVencimento">Ano de vencimento</label>
+                      <Field
+                        id="anoVencimento"
+                        name="anoVencimento"
+                        placeholder="xxxx"
+                        maxLength={4}
+                      />
+                      <ErrorMessage name="anoVencimento" component="div" />
+                    </div>
                   </div>
-                  <div>
-                    <label htmlFor="anoVencimento">Ano de vencimento</label>
-                    <Field
-                      id="anoVencimento"
-                      name="anoVencimento"
-                      placeholder="xxxx"
-                    />
-                    <ErrorMessage name="anoVencimento" component="div" />
-                  </div>
-                </div>
 
-                <BotaoPagamento type="submit" onClick={finalizarCompra}>
-                  Finalizar pagamento
-                </BotaoPagamento>
-                <BotaoCarrinho type="button" onClick={voltarParaEntrega}>
-                  Voltar para a edição de endereço
-                </BotaoCarrinho>
-              </Form>
+                  <BotaoPagamento
+                    type="submit"
+                    disabled={!isValid || isSubmitting}
+                  >
+                    Finalizar pagamento
+                  </BotaoPagamento>
+                  <BotaoCarrinho type="button" onClick={voltarParaEntrega}>
+                    Voltar para a edição de endereço
+                  </BotaoCarrinho>
+                </Form>
+              )}
             </Formik>
           </CartPagamento>
         ) : isEntregaAtiva ? (
@@ -302,82 +323,78 @@ const Cart = () => {
                 await continuarComPagamento(values)
               }}
             >
-              {({ setFieldValue, isValid, isSubmitting }) => {
-                console.log('isValid:', isValid)
-                console.log('isSubmitting', isSubmitting)
-                return (
-                  <Form>
-                    <label htmlFor="nome">Quem irá receber</label>
-                    <Field id="nome" name="nome" placeholder="Digite o nome" />
-                    <ErrorMessage name="nome" component="div" />
+              {({ setFieldValue, isValid, isSubmitting }) => (
+                <Form>
+                  <label htmlFor="nome">Quem irá receber</label>
+                  <Field id="nome" name="nome" placeholder="Digite o nome" />
+                  <ErrorMessage name="nome" component="div" />
 
-                    <label htmlFor="endereco">Endereço</label>
-                    <Field
-                      id="endereco"
-                      name="endereco"
-                      placeholder="Digite o endereço"
-                    />
-                    <ErrorMessage name="endereco" component="div" />
+                  <label htmlFor="endereco">Endereço</label>
+                  <Field
+                    id="endereco"
+                    name="endereco"
+                    placeholder="Digite o endereço"
+                  />
+                  <ErrorMessage name="endereco" component="div" />
 
-                    <label htmlFor="cidade">Cidade</label>
-                    <Field
-                      id="cidade"
-                      name="cidade"
-                      placeholder="Digite a cidade"
-                    />
-                    <ErrorMessage name="cidade" component="div" />
+                  <label htmlFor="cidade">Cidade</label>
+                  <Field
+                    id="cidade"
+                    name="cidade"
+                    placeholder="Digite a cidade"
+                  />
+                  <ErrorMessage name="cidade" component="div" />
 
-                    <div className="cep-numero-container">
-                      <div className="cep-container">
-                        <label htmlFor="cep">CEP</label>
-                        <Field
-                          id="cep"
-                          name="cep"
-                          placeholder="Digite o CEP"
-                          component={InputMask}
-                          mask="99999-999"
-                          type="text"
-                          onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                            const value = e.target.value
-                            setFieldValue('cep', value)
-                          }}
-                        />
-                        <ErrorMessage name="cep" component="div" />
-                      </div>
-                      <div className="numero-container">
-                        <label htmlFor="numero">Número</label>
-                        <Field
-                          id="numero"
-                          name="numero"
-                          placeholder="Digite o número"
-                        />
-                        <ErrorMessage name="numero" component="div" />
-                      </div>
+                  <div className="cep-numero-container">
+                    <div className="cep-container">
+                      <label htmlFor="cep">CEP</label>
+                      <Field
+                        id="cep"
+                        name="cep"
+                        placeholder="Digite o CEP"
+                        component={InputMask}
+                        mask="99999-999"
+                        type="text"
+                        onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                          const value = e.target.value
+                          setFieldValue('cep', value)
+                        }}
+                      />
+                      <ErrorMessage name="cep" component="div" />
                     </div>
+                    <div className="numero-container">
+                      <label htmlFor="numero">Número</label>
+                      <Field
+                        id="numero"
+                        name="numero"
+                        placeholder="Digite o número"
+                      />
+                      <ErrorMessage name="numero" component="div" />
+                    </div>
+                  </div>
 
-                    <label htmlFor="#">Complemento (opcional)</label>
-                    <Field type="text" id="#" name="#" />
+                  <label htmlFor="#">Complemento (opcional)</label>
+                  <Field type="text" id="#" name="#" />
 
-                    <BotaoPagamento
-                      type="submit"
-                      disabled={!isValid || isSubmitting}
-                    >
-                      Continuar com pagamento
-                    </BotaoPagamento>
+                  <BotaoPagamento
+                    type="submit"
+                    disabled={!isValid || isSubmitting}
+                  >
+                    Continuar com pagamento
+                  </BotaoPagamento>
 
-                    <BotaoCarrinho type="button" onClick={voltarParaCarrinho}>
-                      Voltar para o carrinho
-                    </BotaoCarrinho>
-                  </Form>
-                )
-              }}
+                  <BotaoCarrinho type="button" onClick={voltarParaCarrinho}>
+                    Voltar para o carrinho
+                  </BotaoCarrinho>
+                </Form>
+              )}
             </Formik>
           </CartEntrega>
         ) : (
           <div>
             <ul>
-              {items && Array.isArray(items) && items.length > 0 ? (
-                items.map((produto) => (
+              {itensSalvos.length > 0 ? (
+                itensSalvos.map((produto) => (
                   <CartItem key={produto.id}>
                     <img src={produto.foto} />
                     <div>

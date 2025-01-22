@@ -247,7 +247,6 @@ export const CartCompra = styled.div`
   h2 {
     width: 219px;
     height: 19px;
-
     font-family: Roboto, sans-serif;
     font-weight: 700;
     font-size: 16px;
