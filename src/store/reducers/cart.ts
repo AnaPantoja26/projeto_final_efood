@@ -22,8 +22,8 @@ type CartState = {
   isOpen: boolean
 }
 const initialState: CartState = {
-  items: [],
-  isOpen: false
+  isOpen: false,
+  items: []
 }
 
 const cartSlice = createSlice({
@@ -31,6 +31,9 @@ const cartSlice = createSlice({
   initialState,
   reducers: {
     add: (state, action: PayloadAction<Cardapio>) => {
+      if (!Array.isArray(state.items)) {
+        state.items = []
+      }
       const produto = state.items.find((item) => item.id === action.payload.id)
       if (!produto) {
         state.items.push(action.payload)
@@ -38,8 +41,11 @@ const cartSlice = createSlice({
         alert('O produto já está no carrinho')
       }
     },
+
     remove: (state, action: PayloadAction<number>) => {
-      state.items = state.items.filter((item) => item.id !== action.payload)
+      if (Array.isArray(state.items)) {
+        state.items = state.items.filter((item) => item.id !== action.payload)
+      }
     },
     open: (state) => {
       state.isOpen = true

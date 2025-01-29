@@ -1,11 +1,10 @@
-import React, { useState } from 'react'
+import React, { ChangeEvent, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootReducer } from '../../store'
 import { close, remove } from '../../store/reducers/cart'
 import { Formik, Field, Form, ErrorMessage } from 'formik'
 import InputMask from 'react-input-mask'
 import * as Yup from 'yup'
-import { ChangeEvent } from 'react'
 
 import {
   BotaoPagamento,
@@ -24,6 +23,7 @@ import {
 } from './styles'
 
 import lixeira from '../../assets/images/lixeira-de-reciclagem 1.png'
+import { usePurchaseMutation } from '../../services/api'
 
 export interface Cardapio {
   foto: string
@@ -47,6 +47,7 @@ const Cart = () => {
   const [isPagamentoAtivo, setIsPagamentoAtivo] = useState(false)
   const [isFinalizado, setIsFinalizado] = useState(false)
   const [confirmacao, setConfirmacao] = useState<any>(null)
+  const [purchase, { isLoading, isError, data }] = usePurchaseMutation()
 
   const { isOpen, items } = useSelector((state: RootReducer) => state.cart)
 
@@ -178,48 +179,25 @@ const Cart = () => {
       <Sidebar>
         {isFinalizado ? (
           <CartCompra>
-            <h2>Pedido Confirmado - ORDER_ID</h2>
-            <div>
-              {confirmacao && (
-                <>
-                  <p>
-                    <strong>Produtos:</strong>
-                  </p>
-                  <ul>
-                    {confirmacao.products.map((product: any) => (
-                      <li key={product.id}>
-                        Produto ID: {product.id}, Preço:{' '}
-                        {formataPreco(product.price)}
-                      </li>
-                    ))}
-                  </ul>
-
-                  <p>
-                    <strong>Entrega:</strong>
-                  </p>
-                  <p>Recebedor: {confirmacao.delivery.receiver}</p>
-                  <p>
-                    Endereço: {confirmacao.delivery.address.description},{' '}
-                    {confirmacao.delivery.address.number},{' '}
-                    {confirmacao.delivery.address.city} -{' '}
-                    {confirmacao.delivery.address.zipCode}
-                  </p>
-
-                  <p>
-                    <strong>Pagamento:</strong>
-                  </p>
-                  <p>Nome no Cartão: {confirmacao.payment.card.name}</p>
-                  <p>
-                    Últimos 4 dígitos do cartão:{' '}
-                    {confirmacao.payment.card.number.slice(-4)}
-                  </p>
-                  <p>
-                    Vencimento: {confirmacao.payment.card.expires.month}/
-                    {confirmacao.payment.card.expires.year}
-                  </p>
-                </>
-              )}
-            </div>
+            <h2>Pedido Confirmado</h2>
+            <br />
+            <p>
+              Estamos felizes em informar que seu pedido já está em processo de
+              preparação e, em breve, será entregue no endereço fornecido.
+              <br />
+              <br />
+              Gostaríamos de ressaltar que nossos entregadores não estão
+              autorizados a realizar cobranças extras.
+              <br />
+              <br />
+              Lembre-se da importância de higienizar as mãos após o recebimento
+              do pedido, garantindo assim sua segurança e bem-estar durante a
+              refeição.
+              <br />
+              <br />
+              Esperamos que desfrute de uma deliciosa e agradável experiência
+              gastronômica. Bom apetite!
+            </p>
             <button type="submit">Concluir</button>
           </CartCompra>
         ) : isPagamentoAtivo ? (
@@ -396,7 +374,7 @@ const Cart = () => {
               {itensSalvos.length > 0 ? (
                 itensSalvos.map((produto) => (
                   <CartItem key={produto.id}>
-                    <img src={produto.foto} />
+                    <img src={produto.foto} alt={produto.nome} />
                     <div>
                       <h3>{produto.nome}</h3>
                       <span>R$ {produto.preco}</span>
@@ -406,7 +384,7 @@ const Cart = () => {
                       title="Clique aqui para excluir a compra"
                       type="button"
                     >
-                      <img src={lixeira} />
+                      <img src={lixeira} alt="Excluir item" />
                     </Button>
                   </CartItem>
                 ))
